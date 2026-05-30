@@ -114,28 +114,29 @@ func addMoney(
 			Amount: -amount,
 		})
 		if err != nil {
-			return fromAccount, toAccount, err
+			return
 		}
 
 		toAccount, err = q.AddAccountBalance(ctx, AddAccountBalanceParams{
 			ID:     toAccountID,
 			Amount: amount,
 		})
-		return fromAccount, toAccount, err
+		if err != nil {
+			return
+		}
 	} else {
 		toAccount, err = q.AddAccountBalance(ctx, AddAccountBalanceParams{
 			ID:     toAccountID,
 			Amount: amount,
 		})
 		if err != nil {
-			return fromAccount, toAccount, err
+			return
 		}
 
 		fromAccount, err = q.AddAccountBalance(ctx, AddAccountBalanceParams{
 			ID:     fromAccountID,
 			Amount: -amount,
 		})
-		return fromAccount, toAccount, err
 	}
+	return
 }
-
