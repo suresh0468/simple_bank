@@ -1,6 +1,12 @@
 postgres:
 	docker run --name postgres18 -p 5432:5432 -e POSTGRES_USER=suresh -e POSTGRES_PASSWORD=2003 -d postgres:18-alpine
 
+postgresStart:
+	docker start postgres18
+
+postgresStop:
+	docker stop postgres18
+
 # Create a new database named simple_bank inside the postgres18 container
 createdb: 
 	docker exec -it postgres18 createdb --username=suresh --owner=suresh simple_bank
@@ -21,4 +27,10 @@ migratedown:
 sqlc: 
 	sqlc generate
 
-.PHONY: postgres createdb dropdb migratedown migrateup	sqlc
+test:
+	go test -v -cover ./...
+
+testClean:
+	go clean -testcache
+
+.PHONY: postgres createdb dropdb migratedown migrateup	sqlc test testClean
