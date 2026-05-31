@@ -33,4 +33,7 @@ test:
 testClean:
 	go clean -testcache
 
+server:
+	go run main.go
+
 .PHONY: postgres createdb dropdb migratedown migrateup	sqlc test testClean
