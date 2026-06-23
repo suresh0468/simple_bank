@@ -36,4 +36,7 @@ testClean:
 server:
 	go run main.go
 
-.PHONY: postgres createdb dropdb migratedown migrateup	sqlc test testClean
+mock: 
+	mockgen -package mockdb -destination db/mock/store.go github.com/suresh/simple_bank/db/sqlc Store
+
+.PHONY: postgres createdb dropdb migratedown migrateup sqlc test testClean mock

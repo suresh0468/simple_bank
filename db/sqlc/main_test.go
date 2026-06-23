@@ -11,7 +11,7 @@ import (
 )
 
 var testQueries *Queries
-var testStore *Store
+var testStore Store
 var testDB *sql.DB
 
 func TestMain(m *testing.M) {
@@ -26,7 +26,7 @@ func TestMain(m *testing.M) {
 	}
 
 	testStore = NewStore(testDB)
-	testQueries = testStore.Queries
+	testQueries = New(testDB)
 
 	os.Exit(m.Run())
 }
