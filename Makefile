@@ -45,4 +45,10 @@ server:
 mock: 
 	mockgen -package mockdb -destination db/mock/store.go github.com/suresh/simple_bank/db/sqlc Store
 
-.PHONY: postgres createdb dropdb migrateup migrateup1 migratedown migratedown1 sqlc test testClean mock
+composeup:
+	docker compose up
+
+composedown:
+	docker compose down
+
+.PHONY: postgres createdb dropdb migrateup migrateup1 migratedown migratedown1 sqlc test testClean mock composeup composedown
