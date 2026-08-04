@@ -54,3 +54,5 @@ composedown:
 	docker compose down
 
 .PHONY: postgres createdb dropdb migrateup migrateup1 migratedown migratedown1 sqlc test testClean mock composeup composedown
+
+# testin
