@@ -35,11 +35,11 @@ jobs:
           ECR_REPOSITORY: simple-bank
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          # Build Docker image with both tags
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
+          # Build Docker image with unique Git SHA tag
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
 
-          # Push all tags to ECR
-          docker push -a $ECR_REGISTRY/$ECR_REPOSITORY
+          # Push only the unique tag to ECR (bypasses immutability rule)
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
       - name: Update kube config
         run: aws eks update-kubeconfig --name simple-bank --region eu-north-1
