@@ -51,8 +51,7 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           # 1. Apply config files. (Note: deployment.yaml contains an old, hardcoded image hash)
-          # We apply it anyway to ensure any changes to ports, replicas, etc., are updated .
-          kubectl apply -f eks/aws-auth.yaml
+          # We apply it anyway to ensure any changes to ports, replicas, etc., are updated.
           kubectl apply -f eks/deployment.yaml
           kubectl apply -f eks/service.yaml
           kubectl apply -f eks/ingress.yaml
