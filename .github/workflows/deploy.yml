@@ -7,7 +7,7 @@ on:
 
 jobs:
 
-  build:
+  deploy:
     name: Build Image
     runs-on: ubuntu-latest
 
@@ -35,8 +35,28 @@ jobs:
           ECR_REPOSITORY: simple-bank
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          # Build Docker image
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          # Build Docker image with both tags
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
 
-          # Push image to ECR
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          # Push all tags to ECR
+          docker push -a $ECR_REGISTRY/$ECR_REPOSITORY
+
+      - name: Update kube config
+        run: aws eks update-kubeconfig --name simple-bank --region eu-north-1
+
+      - name: Deploy image to Amazon EKS
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: simple-bank
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          # 1. Apply config files. (Note: deployment.yaml contains an old, hardcoded image hash)
+          # We apply it anyway to ensure any changes to ports, replicas, etc., are updated.
+          kubectl apply -f eks/aws-auth.yaml
+          kubectl apply -f eks/deployment.yaml
+          kubectl apply -f eks/service.yaml
+          kubectl apply -f eks/ingress.yaml
+          
+          # 2. Immediately override the old hash from deployment.yaml with the brand new image tag.
+          # This safely bypasses the old hash and forces EKS to rollout the new code immediately.
+          kubectl set image deployment/simple-bank-deployment simple-bank=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
