@@ -56,6 +56,6 @@ jobs:
           kubectl apply -f eks/service.yaml
           kubectl apply -f eks/ingress.yaml
           
-          # 2. Immediately override the old hash from deployment.yaml with the brand new image tag  .
+          # 2. Immediately override the old hash  from deployment.yaml with the brand new image tag  .
           # This safely bypasses the  old hash and forces EKS to rollout the new code immediately.
           kubectl set image deployment/simple-bank-deployment simple-bank=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
