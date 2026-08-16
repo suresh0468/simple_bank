@@ -1,4 +1,5 @@
-DB_URL=postgresql://dbadmin:9704913414@simple-bank.c92gakcg4vk4.eu-north-1.rds.amazonaws.com:5432/postgres?sslmode=require
+-include app.env
+DB_URL=$(DB_SOURCE)
 
 postgres:
 	docker run --name postgres18 -p 5432:5432 -e POSTGRES_USER=suresh -e POSTGRES_PASSWORD=2003 -d postgres:18-alpine
