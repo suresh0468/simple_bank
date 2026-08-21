@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "github.com/suresh/simple_bank/pb";
+
+import "rpc_create_user.proto";
+
+service SimpleBank {
+    rpc CreateUser (CreateUserRequest) returns (CreateUserResponse);
+}
