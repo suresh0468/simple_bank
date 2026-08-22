@@ -5,8 +5,21 @@ package pb;
 option go_package = "github.com/suresh/simple_bank/pb";
 
 import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
 import "rpc_create_user.proto";
 import "rpc_login_user.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+    info: {
+        title: "Simple Bank API";
+        version: "1.2";
+        contact: {
+            name: "Suresh";
+            url: "https://github.com/suresh0468";
+            email: "suresh@example.com";
+        };
+    };
+};
 
 service SimpleBank {
     rpc CreateUser (CreateUserRequest) returns (CreateUserResponse) {
@@ -14,11 +27,20 @@ service SimpleBank {
             post: "/v1/users"
             body: "*"
         };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to register a new user in the banking system.";
+            summary: "Create a new user";
+        };
     }
+
     rpc LoginUser (LoginUserRequest) returns (LoginUserResponse) {
         option (google.api.http) = {
             post: "/v1/users/login"
             body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to authenticate a user and obtain an access token and refresh token.";
+            summary: "Login user";
         };
     }
 }
